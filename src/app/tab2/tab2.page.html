@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+    <ion-toolbar color="dark">
+        <ion-title class="text-sansita" color="light">
+            Buscar película
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-toolbar>
+    <!-- <ion-searchbar placeholder="Película" inputmode="text" animated (ionChange)="onSearchChange($event)" [debounce]="700" showCancelButton="always"></ion-searchbar> -->
+    <ion-searchbar placeholder="Película" inputmode="text" animated (ionChange)="onSearchChange($event)" [debounce]="1000" showCancelButton="always"></ion-searchbar>
+</ion-toolbar>
+
+<ion-content [fullscreen]="true">
+
+    <ion-grid *ngIf="buscando">
+        <ion-row>
+            <ion-col class="ion-text-center">
+                <ion-spinner name="crescent"></ion-spinner>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-grid fixed>
+        <ion-row>
+            <ion-col size="12" class="ion-text-end">
+                <h3>
+                    <small *ngIf="numeroPeliculasEncontradas >= 0" class="ion-text-right">{{numeroPeliculasEncontradas}} resultados</small>
+                </h3>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-grid fixed>
+        <ion-row>
+            <ion-col size="6" *ngFor="let pelicula of resultadoBusqueda">
+
+                <ion-card (click)="mostrarDetalle(pelicula.id)">
+                    <img [src]="pelicula.poster_path | poster">
+                    <div style="position: absolute; top:7px; left: 7px; padding: 1px; background-color: black; color: whitesmoke">{{pelicula.vote_average}}</div>
+                    <ion-card-header>
+                        <ion-card-subtitle>{{pelicula.release_date | date:'dd-MM-yyyy'}}</ion-card-subtitle>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <h2>{{pelicula.title}}</h2>
+                        <h3><i>({{pelicula.original_title}})</i></h3>
+                    </ion-card-content>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-infinite-scroll threshold="15%" position="bottom" (ionInfinite)="cargarSiguientePagina($event)">
+        <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Cargando más películas...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+</ion-content>
